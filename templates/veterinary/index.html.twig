@@ -4,24 +4,24 @@
 
 {% block body %}
 
-                <h1>Liste des vétérinaires</h1>
-                    <p class="text-center padding-tb-10">
-        <a href="" class="btn btn-info">
-        <i class="bi bi-plus"></i>
-        Nouveau
-        </a>
-        </p>
-        <table class="table">
-        <thead>
-        <tr>
-        <th>Id</th>
-        <th>Nom</th>
-        <th>Adresse</th>
-        <th>CP</th>
-        <th>Ville</th>
-        <th>Action</th>
-        </tr>
-        </thead>
+            <h1>Liste des vétérinaires</h1>
+                <p class="text-center padding-tb-10">
+                    <a href="" class="btn btn-info">
+                <i class="bi bi-plus"></i>
+                    Nouveau
+                    </a>
+                </p>
+         <table class="table">
+              <thead>
+                      <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Adresse</th>
+                        <th>CP</th>
+                        <th>Ville</th>
+                        <th>Action</th>
+                      </tr>
+              </thead>
         <tbody>
         {% for veto in lesVetos %}
         <tr>

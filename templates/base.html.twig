@@ -29,19 +29,19 @@ navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">    
-                    <a href=" " class="navbar-brand">Galaxy Swiss Bourdin</a>
+                    <a href="{{ path('app_home') }}" class="navbar-brand">Galaxy Swiss Bourdin</a>
                 <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="" title="Accueil">Accueil</a>
+                    <a class="nav-link"  href="{{ path('app_home') }}" title="Accueil">Accueil</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="" title="Les vétérinaires">Les vétérinaires</a>
+                    <a class="nav-link" href="{{ path('app_veterinary_index') }}" title="Les vétérinaires">Les vétérinaires</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="" title="Suivi">Suivi</a>
+                    <a class="nav-link" href="{{ path('app_home') }}" title="Suivi">Suivi</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="" title="Les produits">Les produits</a>
+                    <a class="nav-link" href="{{ path('app_home') }}" title="Les produits">Les produits</a>
                 </li>
             </ul>
         </div>
