@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Veterinary{% endblock %}
+
+{% block body %}
+   <h1>Modifier le vétérinaire n°
+   
+         {{ veterinary.id }}</h1>
+    
+    {{ include('veterinary/_form.html.twig', {'button_label': 'Modifier'}) }}
+   
+    {{ include('veterinary/_delete_form.html.twig') }}
+    
+    <ul class="liens list-unstyled mt-3"> … </ul>
+{% endblock %}

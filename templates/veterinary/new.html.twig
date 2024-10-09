@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajout vétérinaire{% endblock %}
+
+
+{% block body %}
+    <h1>Ajout d’un vétérinaire</h1>
+
+    {{ include('veterinary/_form.html.twig') }}
+
+    <a href="{{ path('app_veterinary_index') }}">
+        <i class="bi bi-chevron-left"></i> &nbsp;Retour à la liste
+    </a>
+{% endblock %}

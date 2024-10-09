@@ -2,59 +2,80 @@
 
 namespace App\Controller;
 
+use App\Entity\Veterinary;
+use App\Form\VeterinaryType;
+use App\Repository\VeterinaryRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/veterinary')]
 class VeterinaryController extends AbstractController
 {
-    #[Route('/veterinary', name: 'app_veterinary_index', methods: ['GET'])]
-    public function index(): Response
-    {
-        
-      // On appelle la vue en lui fournissant la liste des vétérinaires
-    // dans une variable TWIG nommée lesVetos
-    return $this->render('veterinary/index.html.twig', [
-        'lesVetos' => $this->lesVeterinaires
-    ]);
-    }
-
-    #[Route('/veterinary/{id}/show', 'app_veterinary_show', methods: ['GET'])]
-    public function show(int $id): Response
+    #[Route('/', name: 'app_veterinary_index', methods: ['GET'])]
+    public function index(VeterinaryRepository $veterinaryRepository): Response
     {
         return $this->render('veterinary/index.html.twig', [
-            'controller_name' => 'VeterinaryController',
-            'idVeto' => $id
+            'veterinaries' => $veterinaryRepository->findAll(),
         ]);
     }
 
-    private $lesVeterinaires = [
-        [
-        'id' => 1,
-        'nom' => 'Lasseau et Desguerre',
-        'adresse' => '3 rue du 11 novembre',
-        'codePostal' => '60340',
-        'ville' => 'SAINT LEU D\'ESSERENT',
-        'telephone' => '03.44.55.66.77',
-        'fichierImage' => '17.jpg'
-        ],
-        [
-        'id' => 2,
-        'nom' => 'Saudubray Jérôme',
-        'adresse' => '86 rue de la république',
-        'codePostal' => '60100',
-        'ville' => 'CREIL',
-        'telephone' => '03.44.99.88.77',
-        'fichierImage' => '12.jpg'
-        ],
-        [
-        'id' => 3,
-        'nom' => 'Brahim et Radji',
-        'adresse' => '64 avenue Claude Péroche',
-        'codePostal' => '60180',
-        'ville' => 'NOGENT SUR OISE',
-        'telephone' => '03.22.54.88.77',
-        'fichierImage' => '14.jpg'
-        ]
-        ];
+    #[Route('/new', name: 'app_veterinary_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $veterinary = new Veterinary();
+        $form = $this->createForm(VeterinaryType::class, $veterinary);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($veterinary);
+            $entityManager->flush();    
+
+            return $this->redirectToRoute('app_veterinary_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('veterinary/new.html.twig', [
+            'veterinary' => $veterinary,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_veterinary_show', methods: ['GET'])]
+    public function show(Veterinary $veterinary): Response
+    {
+        return $this->render('veterinary/show.html.twig', [
+            'veterinary' => $veterinary,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'app_veterinary_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Veterinary $veterinary, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(VeterinaryType::class, $veterinary);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_veterinary_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('veterinary/edit.html.twig', [
+            'veterinary' => $veterinary,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_veterinary_delete', methods: ['POST'])]
+    public function delete(Request $request, Veterinary $veterinary, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$veterinary->getId(), $request->getPayload()->get('_token'))) {
+            $entityManager->remove($veterinary);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_veterinary_index', [], Response::HTTP_SEE_OTHER);
+    }
 }

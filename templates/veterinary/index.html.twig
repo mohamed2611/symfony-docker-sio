@@ -1,43 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Les vétérinaires{% endblock %}
+{% block title %}Veterinary index{% endblock %}
 
 {% block body %}
+    <h1>Veterinary index</h1>
 
-            <h1>Liste des vétérinaires</h1>
-                <p class="text-center padding-tb-10">
-                    <a href="" class="btn btn-info">
-                <i class="bi bi-plus"></i>
-                    Nouveau
-                    </a>
-                </p>
-         <table class="table">
-              <thead>
-                      <tr>
-                        <th>Id</th>
-                        <th>Nom</th>
-                        <th>Adresse</th>
-                        <th>CP</th>
-                        <th>Ville</th>
-                        <th>Action</th>
-                      </tr>
-              </thead>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>PostalCode</th>
+                <th>City</th>
+                <th>Phonep</th>
+                <th>ImageFileName</th>
+                <th>CreationDate</th>
+                <th>actions</th>
+            </tr>
+        </thead>
         <tbody>
-        {% for veto in lesVetos %}
-        <tr>
-        <td><a href="">{{ veto.id }}</a><td>
-        <td> à compléter </td>
-        <td> à compléter </td>
-        <td> à compléter </td>
-        <td> à compléter </td>
-        <td>
-        <a href="">voir</a>&nbsp;
-        <a href="">éditer</a></li>
-        </td>
-        </tr>
+        {% for veterinary in veterinaries %}
+            <tr>
+                <td>{{ veterinary.id }}</td>
+                <td>{{ veterinary.name }}</td>
+                <td>{{ veterinary.address }}</td>
+                <td>{{ veterinary.postalCode }}</td>
+                <td>{{ veterinary.city }}</td>
+                <td>{{ veterinary.phonep }}</td>
+                <td>{{ veterinary.imageFileName }}</td>
+                <td>{{ veterinary.creationDate ? veterinary.creationDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_veterinary_show', {'id': veterinary.id}) }}">Voir</a>
+                    <a href="{{ path('app_veterinary_edit', {'id': veterinary.id}) }}">Modifier</a>
+                </td>
+            </tr>
         {% else %}
-        <tr><td colspan="6">Aucun vétérinaire !</td></tr>
-      {% endfor %}
+            <tr>
+                <td colspan="9">aucun enregistrement trouvé</td>
+            </tr>
+        {% endfor %}
         </tbody>
-      </table>
+    </table>
+
+    <a href="{{ path('app_veterinary_new') }}">Nouveau</a>
 {% endblock %}
