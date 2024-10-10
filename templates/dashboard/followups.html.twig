@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Suivis par vétérinaire {% endblock %}
+
+{% block body %}
+<h1>Nombre de suivis par vétérinaire</h1>
+  <table class="table">
+        <tbody>
+                
+                   
+                
+                <tr>
+                <th>Id</th>
+
+                <th>Vétérinaire</th>
+
+                <th>Adresse</th>
+
+                <th>Nombre de suivis</th>
+                </tr>
+                
+                
+                {% for each in followup %}
+                <tr>
+                        <td>{{each.id}}  </td>
+                        <td>{{each.name}}  </td>
+                        <td>{{each.address}} </td>
+                
+                </tr>
+                {% endfor %}
+                
+           
+
+                      
+               
+        </tbody>
+  </table>
+{% endblock %}
