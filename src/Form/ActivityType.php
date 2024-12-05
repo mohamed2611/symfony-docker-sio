@@ -8,19 +8,15 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class ActivityType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
-            ->add('description')
-            ->add('veterinaries', EntityType::class, [
-                'class' => Veterinary::class,
-                'choice_label' => 'id',
-                'multiple' => true,
-            ])
-        ;
+    $builder
+        ->add('description', TextType::class, ['label' => 'Description'])
+    ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

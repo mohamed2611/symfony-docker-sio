@@ -17,14 +17,14 @@ class Veterinary
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-   
+
     #[ORM\Column(length: 100)]
-        #[Assert\Length(
+    #[Assert\Length(
         min: 10,
         max: 100,
         minMessage: '{{ limit }} caractères minimum',
         maxMessage: '{{ limit }} caractères maximum',
-        )]
+    )]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
@@ -32,7 +32,7 @@ class Veterinary
     #[Assert\Regex(
         pattern: "/^(0[1-9]|[1-9][0-9])[0-9]{3}$/",
         message: "Ce code postal n'existe pas"
-        )]
+    )]
 
     #[ORM\Column(length: 5)]
     private ?string $postalCode = null;
@@ -43,16 +43,16 @@ class Veterinary
         max: 50,
         minMessage: '{{ limit }} caractères minimum',
         maxMessage: '{{ limit }} caractères maximum',
-        )]
+    )]
     private ?string $city = null;
-   
+
 
     #[ORM\Column(length: 25)]
     #[Assert\Regex(
         pattern: "/^0[1-9](?:\.\d{2}){4}$/",
         message: "Le numéro de téléphone doit être au format 99.99.99.99.99 et commencer par 0 suivi d'un chiffre entre 1 et 9."
     )]
-    
+
     private ?string $phonep = null;
 
     #[ORM\Column(length: 255)]
@@ -73,14 +73,19 @@ class Veterinary
     #[ORM\OneToMany(targetEntity: FollowUp::class, mappedBy: 'veterinary')]
     private Collection $followUp;
 
+    #[ORM\ManyToOne(inversedBy: 'veterinaries')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
+
     public function __construct()
     {
         $this->activities = new ArrayCollection();
         $this->followUp = new ArrayCollection();
-       
+
         $this->creationDate = new \Datetime();
 
     }
+
 
     public function getId(): ?int
     {
@@ -168,6 +173,7 @@ class Veterinary
     {
         $this->creationDate = $creationDate;
 
+      
         return $this;
     }
 
@@ -221,6 +227,18 @@ class Veterinary
                 $followUp->setVeterinary(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }

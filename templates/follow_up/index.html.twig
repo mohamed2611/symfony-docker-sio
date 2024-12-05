@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}FollowUp index
+{% endblock %}
+
+{% block body %}
+	<h1>Suivi des vétérinaires</h1>
+
+	<a href="{{ path('app_follow_up_new') }}" class="btn btn-primary">
+		<i class="bi bi-plus"></i>
+		Nouveau
+	</a>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Vétérinaire</th>
+				<th>Nom du Contact</th>
+				<th>Date de l'appel</th>
+				<th>Commentaires</th>
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% set sorted_follow_ups = follow_ups|sort((a, b) => b.callDate <=> a.callDate) %}
+
+			{% for follow_up in sorted_follow_ups %}
+				<tr>
+					<td>{{ follow_up.id }}</td>
+					<td>{{ follow_up.getVeterinary.getName }}</td>
+					<td>{{ follow_up.contactName }}</td>
+					<td>{{ follow_up.callDate ? follow_up.callDate|date('Y-m-d') : '' }}</td>
+					<td>{{ follow_up.comment }}</td>
+					<td>
+						<a href="{{ path('app_follow_up_show', {'id': follow_up.id}) }}">voir</a>
+						<a href="{{ path('app_follow_up_edit', {'id': follow_up.id}) }}">modifier</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="5">no records found</td>
+				</tr>
+			{% endfor %}
+
+		</tbody>
+	</table>
+
+
+{% endblock %}

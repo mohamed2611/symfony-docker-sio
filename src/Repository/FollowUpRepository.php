@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\FollowUp;
+use App\Entity\Veterinary;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -15,6 +16,16 @@ class FollowUpRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, FollowUp::class);
     }
+
+    public function findByVeterinary(Veterinary $veterinary): array
+{
+    return $this->createQueryBuilder('f')
+        ->andWhere('f.veterinary = :veterinary')
+        ->setParameter('veterinary', $veterinary)
+        ->orderBy('f.date', 'DESC')
+        ->getQuery()
+        ->getResult();
+}
 
     //    /**
     //     * @return FollowUp[] Returns an array of FollowUp objects

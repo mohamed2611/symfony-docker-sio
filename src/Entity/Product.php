@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
+
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,6 +21,10 @@ class Product
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $price = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
+   
     public function getId(): ?int
     {
         return $this->id;
@@ -48,4 +53,25 @@ class Product
 
         return $this;
     }
+
+    
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function updateTimestamp(): void
+    {
+        $this->updatedAt = new \DateTime();
+    }
 }
+
+    
+

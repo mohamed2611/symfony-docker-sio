@@ -6,13 +6,23 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 use App\Entity\Activity;
+use App\Entity\Category;
 use App\Entity\FollowUp;
 use App\Entity\Goal;
 use App\Entity\Product;
 use App\Entity\Veterinary;
+use App\Entity\User;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface as HasherUserPasswordHasherInterface;
+use Symphony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    private $passwordHasher;
+    public function __construct(HasherUserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
+
     public function load(ObjectManager $manager): void
     {
         $djourMoins45jours = (new \Datetime())->sub(new \DateInterval('P45D'));
@@ -20,6 +30,44 @@ class AppFixtures extends Fixture
         $djourMoins20jours = (new \Datetime())->sub(new \DateInterval('P20D'));
         $djourMoins15jours = (new \Datetime())->sub(new \DateInterval('P15D'));
         $djourMoins5jours = (new \Datetime())->sub(new \DateInterval('P5D'));
+        $an = intval(\date("Y"));
+        $anprec = $an - 1;
+
+        //region Les utilisateurs
+        $user = new User();
+        $user->setUsername('admin');
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            'admin'
+        );
+        $user->setPassword($hashedPassword);
+        $user->setRoles(['ROLE_ADMIN']);
+        $manager->persist($user);
+
+        $user = new User();
+        $user->setUsername('user');
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            'user'
+        );
+        $user->setPassword($hashedPassword);
+        $user->setRoles(['ROLE_USER']);
+        $manager->persist($user);
+
+
+        $user = new User();
+        $user->setUsername('manager');
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            'manager'
+        );
+        $user->setPassword($hashedPassword);
+        $user->setRoles(['ROLE_MANAGER']);
+        $manager->persist($user);
+
+
+
+        
 
         //region Les activités
         $activite1 = new Activity();
@@ -51,6 +99,26 @@ class AppFixtures extends Fixture
         $manager->persist($activite7);
         //endregion
 
+        //region les catégories
+        
+        $categorie1 = new Category();
+        $categorie1->setName('cabinet vétérinaire');
+        $manager->persist($categorie1);
+
+        $categorie2 = new Category();
+        $categorie2->setName('clinique vétérinaire');
+        $manager->persist($categorie2);
+
+        $categorie3 = new Category();
+        $categorie3->setName('centre hospitalier vétérinaire');
+        $manager->persist($categorie3);
+
+        $categorie4 = new Category();
+        $categorie4->setName('centre de vétérinaires spécialisés');
+        $manager->persist($categorie4);
+
+        //endregion 
+
         //region Les vétérinaires
         $veto1 = new Veterinary();
         $veto1->setName('Lasseau et Desguerre');
@@ -64,8 +132,9 @@ class AppFixtures extends Fixture
         $veto1->addActivity($activite2);
         $veto1->addActivity($activite5);
         $veto1->addActivity($activite6);
+        $veto1->setCategory($categorie1);
         $manager->persist($veto1);
-
+        
         $veto2 = new Veterinary();
         $veto2->setName('Saudubray Jérôme');
         $veto2->setAddress('86 rue de la république');
@@ -78,8 +147,9 @@ class AppFixtures extends Fixture
         $veto2->addActivity($activite2);
         $veto2->addActivity($activite5);
         $veto2->addActivity($activite6);
+        $veto2->setCategory($categorie2);
         $manager->persist($veto2);
-
+        
         $veto3 = new Veterinary();
         $veto3->setName('Brahim et Radji');
         $veto3->setAddress('64 avenue Claude Péroche');
@@ -94,8 +164,9 @@ class AppFixtures extends Fixture
         $veto3->addActivity($activite5);
         $veto3->addActivity($activite6);
         $veto3->addActivity($activite7);
+        $veto3->setCategory($categorie1);
         $manager->persist($veto3);
-
+        
         $veto4 = new Veterinary();
         $veto4->setName('Clinique Duvernet');
         $veto4->setAddress('30 rue des lilas');
@@ -111,8 +182,9 @@ class AppFixtures extends Fixture
         $veto4->addActivity($activite5);
         $veto4->addActivity($activite6);
         $veto4->addActivity($activite7);
+        $veto4->setCategory($categorie3);
         $manager->persist($veto4);
-
+        
         $veto5 = new Veterinary();
         $veto5->setName('Chambly Vétérinaires');
         $veto5->setAddress('25 rue du pont');
@@ -125,8 +197,9 @@ class AppFixtures extends Fixture
         $veto5->addActivity($activite2);
         $veto5->addActivity($activite5);
         $veto5->addActivity($activite6);
+        $veto5->setCategory($categorie3);
         $manager->persist($veto5);
-
+        
         $veto6 = new Veterinary();
         $veto6->setName('Clinique vétérinaire de Diane');
         $veto6->setAddress('26 rue Victor Hugo');
@@ -139,6 +212,7 @@ class AppFixtures extends Fixture
         $veto6->addActivity($activite2);
         $veto6->addActivity($activite5);
         $veto6->addActivity($activite6);
+        $veto6->setCategory($categorie4);
         $manager->persist($veto6);
         //endregion
 
@@ -244,126 +318,184 @@ class AppFixtures extends Fixture
         $objectif->setVeterinary($veto1);
         $objectif->setProduct($produit1);
         $objectif->setAmount(500);
+        $objectif->setYear($an);
+        $manager->persist($objectif);
+
+        $objectif = new Goal();
+        $objectif->setVeterinary($veto1);
+        $objectif->setProduct($produit1);
+        $objectif->setAmount(450);
+        $objectif->setYear($anprec);
+        $manager->persist($objectif);
+        
+        $objectif = new Goal();
+        $objectif->setVeterinary($veto1);
+        $objectif->setProduct($produit7);
+        $objectif->setAmount(1000);
+        $objectif->setYear($an);
         $manager->persist($objectif);
 
         $objectif = new Goal();
         $objectif->setVeterinary($veto1);
         $objectif->setProduct($produit7);
-        $objectif->setAmount(1000);
+        $objectif->setAmount(800);
+        $objectif->setYear($anprec);
         $manager->persist($objectif);
 
+        $objectif = new Goal();
+        $objectif->setVeterinary($veto1);
+        $objectif->setProduct($produit7);
+        $objectif->setAmount(780);
+        $objectif->setYear($anprec-1);
+        $manager->persist($objectif);
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto1);
         $objectif->setProduct($produit3);
         $objectif->setAmount(500);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto1);
         $objectif->setProduct($produit8);
         $objectif->setAmount(800);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto1);
         $objectif->setProduct($produit12);
         $objectif->setAmount(500);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto1);
         $objectif->setProduct($produit9);
         $objectif->setAmount(1500);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto2);
         $objectif->setProduct($produit1);
         $objectif->setAmount(800);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto2);
         $objectif->setProduct($produit2);
         $objectif->setAmount(520);
+        $objectif->setYear($an);
+        $manager->persist($objectif);
+        
+        
+        $objectif = new Goal();
+        $objectif->setVeterinary($veto2);
+        $objectif->setProduct($produit2);
+        $objectif->setAmount(400);
+        $objectif->setYear($anprec);
         $manager->persist($objectif);
 
         $objectif = new Goal();
         $objectif->setVeterinary($veto2);
         $objectif->setProduct($produit3);
         $objectif->setAmount(520);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto2);
         $objectif->setProduct($produit5);
         $objectif->setAmount(1000);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto2);
         $objectif->setProduct($produit12);
         $objectif->setAmount(800);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto5);
         $objectif->setProduct($produit1);
         $objectif->setAmount(700);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto5);
         $objectif->setProduct($produit2);
         $objectif->setAmount(1800);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto5);
         $objectif->setProduct($produit3);
         $objectif->setAmount(520);
+        $objectif->setYear($an);
         $manager->persist($objectif);
+        
+        $objectif = new Goal();
+        $objectif->setVeterinary($veto5);
+        $objectif->setProduct($produit3);
+        $objectif->setAmount(300);
+        $objectif->setYear($anprec);
+        $manager->persist($objectif);
+        
 
         $objectif = new Goal();
         $objectif->setVeterinary($veto5);
         $objectif->setProduct($produit5);
         $objectif->setAmount(1000);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto5);
         $objectif->setProduct($produit7);
         $objectif->setAmount(300);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto5);
         $objectif->setProduct($produit8);
         $objectif->setAmount(200);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto6);
         $objectif->setProduct($produit1);
         $objectif->setAmount(350);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto6);
         $objectif->setProduct($produit7);
         $objectif->setAmount(700);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto6);
         $objectif->setProduct($produit3);
         $objectif->setAmount(200);
+        $objectif->setYear($an);
         $manager->persist($objectif);
-
+        
         $objectif = new Goal();
         $objectif->setVeterinary($veto6);
         $objectif->setProduct($produit8);
         $objectif->setAmount(400);
+        $objectif->setYear($an);
         $manager->persist($objectif);
         //endregion
 

@@ -1,0 +1,67 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Goal{% endblock %}
+
+{% block body %}
+<h1>Liste des Objectfis fixés aux vétérinaires</h1>
+ <table class="table">
+
+
+<form method="get" action="{{ path('app_goal_index') }}">
+   
+ <section>
+  <div>
+    <a href="{{ path('app_goal_new') }}" class="btn btn-primary">
+        <i class="bi bi-plus"></i> Nouveau
+    </a>
+</div>
+
+<div style="margin-top: 20px;">
+    <label for="veterinary">Vétérinaire :</label>
+    <select id="veterinary" name="veterinary">
+        <option value="">Tous</option>
+        {% for Veterinary in veterinaries %}
+            <option value="{{ Veterinary.id }}">{{ Veterinary.name }}</option>
+        {% endfor %}
+    </select>
+</section>
+
+<div style="margin-top: 20px;">
+    <label for="year">Année :</label>
+    <input type="number" id="year" name="year" value="{{ app.request.query.get('year') }}">
+</div>
+
+<div style="margin-top: 20px;">
+   
+    <button type="submit" class="btn btn-primary" >Filtrer </button>
+</div>
+
+</thead>
+
+    <thead>
+        <tr>
+            <th>Vétérinaire</th>
+            <th>Produit</th>
+            <th>Montant</th>
+            <th>Année</th>
+            <th>action</th>
+                
+        </tr>
+    </thead>
+    <tbody>
+        {% for goal in goals %}
+            <tr>
+                <td>{{ goal.getVeterinary.getname }}</td>
+                <td>{{ goal.product.name }}</td>
+                <td>{{ goal.amount }}</td>
+                <td>{{ goal.year }}</td>
+                <td>
+                    <a href="{{ path('app_goal_show', {'id': goal.id}) }}">Voir</a>
+                    <a href="{{ path('app_goal_edit', {'id': goal.id}) }}">Modifier</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

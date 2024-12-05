@@ -3,19 +3,20 @@
 {% block title %}Veterinary index{% endblock %}
 
 {% block body %}
-    <h1>Veterinary index</h1>
+    <h1>Liste des Vétérinaires</h1>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
-                <th>Address</th>
-                <th>PostalCode</th>
-                <th>City</th>
-                <th>Phonep</th>
+                <th>Nom</th>
+                <th>Adresse</th>
+                <th>Code Postal</th>
+                <th>Ville</th>
+                <th>tel</th>
                 <th>ImageFileName</th>
-                <th>CreationDate</th>
+                <th>DateCreation</th>
+                <th>Catégorie</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -30,6 +31,7 @@
                 <td>{{ veterinary.phonep }}</td>
                 <td>{{ veterinary.imageFileName }}</td>
                 <td>{{ veterinary.creationDate ? veterinary.creationDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{veterinary.getCategory.getName}}
                 <td>
                     <a href="{{ path('app_veterinary_show', {'id': veterinary.id}) }}">Voir</a>
                     <a href="{{ path('app_veterinary_edit', {'id': veterinary.id}) }}">Modifier</a>
@@ -42,6 +44,9 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_veterinary_new') }}">Nouveau</a>
+    
+    
+    <a href="{{ path('app_veterinary_new') }}" class="btn btn-primary">
+    <i class="bi bi-plus"></i> Nouveau
+    </a>
 {% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Goal{% endblock %}
+
+{% block body %}
+    <h1>Ajout d'un objectif vétérinaire </h1>
+
+    {{ include('goal/_form.html.twig') }}
+
+    <a href="{{ path('app_goal_index') }}">
+        <i class="bi bi-chevron-left"></i> &nbsp;Retour à la liste
+    </a>
+{% endblock %}
